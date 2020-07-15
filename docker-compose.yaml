@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    network_mode: "bridge"
+    restart: on-failure
+    volumes:
+      - ./bot/:/bot/
+    ports:
+      - "7001:7001"
+    environment:
+    command: node --use_strict index.js
