@@ -114,6 +114,7 @@ app.get('/message', function(req, res) {
     res.sendStatus(200);
 });
 app.post('/graylog', function(req, res) {
+    console.log(req.body);
     framework.webex.messages.create({
         roomId: 'Y2lzY29zcGFyazovL3VzL1JPT00vMTExMjg2NjAtYzVlOS0xMWVhLWFkZmQtMDdiYjAzMDIxZjNl',
         text: req.body
