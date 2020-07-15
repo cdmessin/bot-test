@@ -67,7 +67,7 @@ framework.hears(/help|what can i (do|say)|what (can|do) you do/i, function(bot, 
 
 
 /* On mention with unexpected bot command
-*/
+ */
 framework.hears(/.*/, function(bot, trigger) {
     // This will fire for any input so only respond if we haven't already
     if (!responded) {
@@ -96,20 +96,19 @@ app.post('/graylog', function(req, res) {
     //Ensures post request contains an event description in the body
     if (req.body.event_definition_description) {
         //Gets list of all rooms that the bot is in
-        framework.webex.rooms.list({
-          })
+        framework.webex.rooms.list({})
             .then(function(rooms) {
-                for (var i = 0; i < rooms.items.length; i+= 1) {
+                for (var i = 0; i < rooms.items.length; i += 1) {
                     //Messages only rooms that are not direct rooms
-                    if(rooms.items[i].type != 'direct'){
+                    if (rooms.items[i].type != 'direct') {
                         framework.webex.messages.create({
                             roomId: rooms.items[i].id,
                             text: 'Alert!: ' + req.body.event_definition_description
                         });
                     }
-                  }
-            return 'success';
-          })
+                }
+                return 'success';
+            })
         res.sendStatus(200);
     } else {
         res.status(400).send('Bad Request, Missing Body')
