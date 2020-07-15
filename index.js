@@ -114,12 +114,25 @@ app.get('/message', function(req, res) {
     res.sendStatus(200);
 });
 app.post('/graylog', function(req, res) {
-    console.log(req.body);
-    framework.webex.messages.create({
-        roomId: 'Y2lzY29zcGFyazovL3VzL1JPT00vMTExMjg2NjAtYzVlOS0xMWVhLWFkZmQtMDdiYjAzMDIxZjNl',
-        text: req.body
-    });
-    res.sendStatus(200);
+    if (req.body) {
+        console.log(req.body);
+        framework.webex.rooms.list()
+            .then((allRooms) => {
+                for (const id of allRooms.items.id) {
+                    framework.webex.messages.create({
+                        //roomId: 'Y2lzY29zcGFyazovL3VzL1JPT00vMTExMjg2NjAtYzVlOS0xMWVhLWFkZmQtMDdiYjAzMDIxZjNl',
+                        roomId: id,
+                        text: 'req body: ' + req.body.event_definition_description
+                    });
+                }
+
+            });
+
+        res.sendStatus(200);
+    } else {
+        res.status(400).send('Bad Request, Missing Body')
+    }
+
 });
 
 app.post('/', webhook(framework));
