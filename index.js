@@ -116,7 +116,7 @@ app.get('/message', function(req, res) {
 app.post('/graylog', function(req, res) {
     framework.webex.messages.create({
         roomId: 'Y2lzY29zcGFyazovL3VzL1JPT00vMTExMjg2NjAtYzVlOS0xMWVhLWFkZmQtMDdiYjAzMDIxZjNl',
-        text: req.message
+        text: req.body
     });
     res.sendStatus(200);
 });
