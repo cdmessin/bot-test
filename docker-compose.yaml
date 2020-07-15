@@ -7,7 +7,7 @@ services:
     network_mode: "bridge"
     restart: on-failure
     volumes:
-      - ./bot/:/bot/
+      - ./:/bot/
     ports:
       - "7001:7001"
     environment:

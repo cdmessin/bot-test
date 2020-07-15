@@ -1,5 +1,4 @@
-//Webex Bot Starter - featuring the webex-node-bot-framework - https://www.npmjs.com/package/webex-node-bot-framework
-
+//Example code taken from Webex Bot Starter
 var framework = require('webex-node-bot-framework');
 var webhook = require('webex-node-bot-framework/webhook');
 var express = require('express');
@@ -63,25 +62,9 @@ framework.hears(/help|what can i (do|say)|what (can|do) you do/i, function(bot, 
         .catch((e) => console.error(`Problem in help hander: ${e.message}`));
 });
 
-/* On mention reply example
-ex User enters @botname 'reply' phrase, the bot will post a threaded reply
-*/
-framework.hears('reply', function(bot, trigger) {
-    console.log("someone asked for a reply.  We will give them two.");
-    responded = true;
-    bot.reply(trigger.message,
-        'This is threaded reply sent using the `bot.reply()` method.',
-        'markdown');
-    var msg_attach = {
-        text: "This is also threaded reply with an attachment sent via bot.reply(): ",
-        file: 'https://media2.giphy.com/media/dTJd5ygpxkzWo/giphy-downsized-medium.gif'
-    };
-    bot.reply(trigger.message, msg_attach);
-});
 
 /* On mention with unexpected bot command
-   Its a good practice is to gracefully handle unexpected input
-*/
+ */
 framework.hears(/.*/, function(bot, trigger) {
     // This will fire for any input so only respond if we haven't already
     if (!responded) {
@@ -94,9 +77,7 @@ framework.hears(/.*/, function(bot, trigger) {
 });
 
 function sendHelp(bot) {
-    bot.say("markdown", 'These are the commands I can respond to:', '\n\n ' +
-        '1. **reply** (have bot reply to your message) \n' +
-        '2. **help** (what you are reading now)');
+    bot.say("markdown", 'I will alert this space of high 5xx and 47x responses on both external and internal clusters.');
 }
 
 
@@ -106,13 +87,9 @@ app.get('/', function(req, res) {
     res.send(`I'm alive.`);
 });
 
-app.get('/message', function(req, res) {
-    framework.webex.messages.create({
-        roomId: 'Y2lzY29zcGFyazovL3VzL1JPT00vMTExMjg2NjAtYzVlOS0xMWVhLWFkZmQtMDdiYjAzMDIxZjNl',
-        text: 'Someone accessed the message endpoint'
-    });
-    res.sendStatus(200);
-});
+/* What to do when graylog contacts the server.
+  Sends the event description as a message to all group rooms that the bot is a part of
+ */
 app.post('/graylog', function(req, res) {
     console.log(req.body);
     //Ensures post request contains an event description in the body
@@ -138,6 +115,7 @@ app.post('/graylog', function(req, res) {
 
 });
 
+//This is the endpoint that is automatically called when the bot is mentioned or added to a room.
 app.post('/', webhook(framework));
 
 var server = app.listen(config.port, function() {

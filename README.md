@@ -1,18 +1,38 @@
-# BDB-Alerts Bot
+# BDB-Alert-Bot
 
-### Taken from template for a simple Webex Teams bot
+This Webex bot receives alerts from Graylog and messages all Webex team spaces that the bot is in with the corresponding event message.
 
-This is a very simple Webex Teams node.JS bot application that serves as a template to be further extended. It features the [webex-node-bot-framework](https://github.com/webex/webex-bot-node-framework) that simplifies development for Webex Teams bots by abstractig away some of the complexity of the API calls and registering for events.  Some parts of the app are taken from on the old [sparkbotstarter](https://github.com/valgaze/sparkbotstarter) template created by Victor Algaze. 
+## Prerequisites:
 
+- [ ] node.js (minimum supported v8.0.0 & npm 2.14.12 and up)
 
+- [ ] Server with open port 7001
+
+- [ ] Sign up for Webex Teams (logged in with your web browser)
 ----
 
 ## Steps to get the bot working
 
+1. Create a new [bot](https://developer.webex.com/my-apps/new/bot/)
 
+2. Clone application on server.
 
-1. Turn on your bot server with ```npm start```
+3. Open config.json and change webhookUrl to be your server's name. Also change token to be your bot's Bot Access Token.
 
-2. Create a space in Webex Teams
+4. Turn on your bot server with ```npm start```
 
-3. Add the bot (by its username @BDB-Alerts) to the space in Webex Teams
+5. Add the bot (by its username @BDB-Alerts) to a space in Webex Teams
+
+6. Navigate to Graylog -> Alerts -> Notifications and click "Add Notification"
+
+7. Select HTTP Notification and enter http://server-name:7001/graylog as the  address
+
+8. While creating a new event under "Event Definitions" add the bot to the notifcation step
+
+### Credits
+Initial template was created from [webex-bot-starter](https://github.com/WebexSamples/webex-bot-starter).
+
+API's refrenced for further expansion of the bot can be found here:
+ - [js-sdk API](https://webex.github.io/webex-js-sdk/api/)
+ - [webex-node-bot-framework](https://github.com/webex/webex-node-bot-framework)
+ 
