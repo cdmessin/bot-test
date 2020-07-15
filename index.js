@@ -114,20 +114,23 @@ app.get('/message', function(req, res) {
     res.sendStatus(200);
 });
 app.post('/graylog', function(req, res) {
-    if (req.body) {
-        console.log(req.body);
-        framework.webex.rooms.list()
-            .then((allRooms) => {
-                for (const id of allRooms.items.id) {
-                    framework.webex.messages.create({
-                        //roomId: 'Y2lzY29zcGFyazovL3VzL1JPT00vMTExMjg2NjAtYzVlOS0xMWVhLWFkZmQtMDdiYjAzMDIxZjNl',
-                        roomId: id,
-                        text: 'req body: ' + req.body.event_definition_description
-                    });
+    console.log(req.body);
+    //Ensures post request contains an event description in the body
+    if (req.body.event_definition_description) {
+        //Gets list of all rooms that the bot is in
+        framework.webex.rooms.list({})
+            .then(function(rooms) {
+                for (var i = 0; i < rooms.items.length; i += 1) {
+                    //Messages only rooms that are not direct rooms
+                    if (rooms.items[i].type != 'direct') {
+                        framework.webex.messages.create({
+                            roomId: rooms.items[i].id,
+                            text: 'Alert!: ' + req.body.event_definition_description
+                        });
+                    }
                 }
-
-            });
-
+                return 'success';
+            })
         res.sendStatus(200);
     } else {
         res.status(400).send('Bad Request, Missing Body')
