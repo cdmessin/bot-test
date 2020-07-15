@@ -1,12 +1,16 @@
-//Example code taken from Webex Bot Starter
 var framework = require('webex-node-bot-framework');
 var webhook = require('webex-node-bot-framework/webhook');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json());
-app.use(express.static('images'));
-const config = require("./config.json");
+
+// framework configs
+const config = {
+    "webhookUrl": process.env.WEBHOOK_URL,
+    "token": process.env.BOT_TOKEN,
+    "port": 7001
+};
 
 // init framework
 var framework = new framework(config);
@@ -17,18 +21,17 @@ framework.on("initialized", function() {
     console.log("framework is all fired up! [Press CTRL-C to quit]");
 });
 
-// A spawn event is generated when the framework finds a space with your bot in it
-// If actorId is set, it means that user has just added your bot to a new space
-// If not, the framework has discovered your bot in an existing space
+// A spawn event is generated when the framework finds a space with the bot in it
+// If actorId is set, it means that user has just added the bot to a new space
+// If not, the framework has discovered the bot in an existing space
 framework.on('spawn', (bot, id, actorId) => {
     if (!actorId) {
-        // don't say anything here or your bot's spaces will get
+        // don't say anything here or the bot's spaces will get
         // spammed every time your server is restarted
         console.log(`While starting up, the framework found our bot in a space called: ${bot.room.title}`);
     } else {
-        // When actorId is present it means someone added your bot got added to a new space
-        // Lets find out more about them..
-        var msg = 'You can say `help` to get the list of words I am able to respond to.';
+        // When actorId is present it means someone added the bot got added to a new space
+        var msg = 'You can say `help` to learn more.';
         bot.webex.people.get(actorId).then((user) => {
             msg = `Hello there ${user.displayName}. ${msg}`;
         }).catch((e) => {
@@ -48,7 +51,7 @@ framework.on('spawn', (bot, id, actorId) => {
 });
 
 
-//Process incoming messages
+//Process incoming messages from Webex
 
 let responded = false;
 /* On mention with command
@@ -70,14 +73,12 @@ framework.hears(/.*/, function(bot, trigger) {
     if (!responded) {
         console.log(`catch-all handler fired for user input: ${trigger.text}`);
         bot.say(`Sorry, I don't know how to respond to "${trigger.text}"`)
-            .then(() => sendHelp(bot))
-            .catch((e) => console.error(`Problem in the unexepected command hander: ${e.message}`));
     }
     responded = false;
 });
 
 function sendHelp(bot) {
-    bot.say("markdown", 'I will alert this space of high 5xx and 47x responses on both external and internal clusters.');
+    bot.say("markdown", 'I will notify this space of any Graylog Alerts. I currently have no available commands');
 }
 
 
@@ -95,7 +96,7 @@ app.post('/graylog', function(req, res) {
     //Ensures post request contains an event description in the body
     if (req.body.event_definition_description) {
         //Gets list of all rooms that the bot is in
-        frameworkwebex.rooms.list({
+        framework.webex.rooms.list({
           })
             .then(function(rooms) {
                 for (var i = 0; i < rooms.items.length; i+= 1) {
@@ -116,7 +117,7 @@ app.post('/graylog', function(req, res) {
 
 });
 
-//This is the endpoint that is automatically called when the bot is mentioned or added to a room.
+//This is the endpoint that is called from webex when the bot is mentioned or added to a room.
 app.post('/', webhook(framework));
 
 var server = app.listen(config.port, function() {
