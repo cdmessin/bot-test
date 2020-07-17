@@ -17,7 +17,7 @@ This Webex bot receives alerts from Graylog and messages all Webex team spaces t
 
 2. Clone application on server.
 
-3. Open config.json and change webhookUrl to be your server's name. Also change token to be your bot's Bot Access Token.
+3. Set two environment variables, ```WEBHOOK_URL``` to be the servers http address, port 7001 and ```BOT_TOKEN``` to be the Bot Access Token that was given upon creation.
 
 4. Turn on your bot server with ```npm start```
 

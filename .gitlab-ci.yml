@@ -1,0 +1,45 @@
+# Gitlab CI scripts to build webex bot and test
+image: tiangolo/docker-with-compose
+
+variables:
+    COMPOSE_HTTP_TIMEOUT: "200"
+
+stages:
+  - static_analysis
+  - unit_test
+
+audit:
+  image: node:8-alpine
+  stage: static_analysis
+  allow_failure: true
+  script:
+    - npm audit --production
+
+lint:
+  stage: static_analysis
+  image: node:8-alpine
+  before_script:
+    - apk add --no-cache git
+  script:
+    - npm install
+    - npm run lint
+
+scanner:
+    image:
+      name: sonarsource/sonar-scanner-cli
+      entrypoint: [""]
+    stage: static_analysis
+    variables:
+      SONAR_TOKEN: $SONAR_TOKEN
+      SONAR_HOST_URL: $SONAR_HOST_URL
+    script:
+      - SONAR_USER_HOME=$PWD/.cache sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectVersion=$(git describe HEAD)
+
+mocha:
+    stage: unit_test
+    image: node:8-alpine
+    before_script:
+        - apk add --no-cache git
+        - npm install
+        - pwd
+    script: "npm run cover"

@@ -1,29 +1,33 @@
 {
-  "name": "Webex-Bot-Starter",
+  "name": "Graylog-Webex-Bot",
   "version": "1.0.0",
-  "description": "Starter template for creating a Webex Teams bot",
-  "main": "index.js",
+  "description": "Webex Teams bot that notifies teamspaces of graylog alerts",
+  "main": "src/index.js",
   "scripts": {
-    "start": "npm install && node --use_strict index.js"
+    "start": "npm install && node --use_strict index.js",
+    "cover": "ALLOW_CONFIG_MUTATIONS=1 npx nyc --all -- mocha --exit --recursive mochaTest/",
+    "lint": "npx eslint ."
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tbd/webexbotstarter.git"
+    "url": "git+https://gitlab-sjc.cisco.com/bdb-borg/bdb-tools/webex-alert-bot.git"
   },
   "keywords": [
     "Cisco",
     "Webex",
     "webex-bot-framework"
   ],
-  "author": "Phil Bellanti",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/tbd/webexbotstarter/issues"
-  },
-  "homepage": "https://github.com/tbd/webexbotstarter#readme",
+  "author": "Craig Messina",
+  "homepage": "https://gitlab-sjc.cisco.com/bdb-borg/bdb-tools/webex-alert-bot#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "webex-node-bot-framework": "^1.0.5"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^5.16.0",
+    "mocha": "^6.2.3"
   }
 }
